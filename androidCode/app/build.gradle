@@ -1,0 +1,70 @@
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.15.0"
+}
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.github.gotify"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 10
+        versionName "2.0.7"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    lintOptions {
+        disable 'GoogleAppIndexingWarning'
+        lintConfig file('../lint.xml')
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+}
+
+dependencies {
+    implementation project(':client')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+
+    implementation 'com.jakewharton:butterknife:9.0.0-rc1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
+    implementation 'com.hypertrack:hyperlog:0.0.10'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'ru.noties.markwon:core:3.0.0'
+    implementation 'ru.noties.markwon:image-gif:3.0.0'
+    implementation 'ru.noties.markwon:ext-tables:3.0.0'
+}
+
+configurations {
+    all {
+        exclude group: 'org.json', module: 'json'
+    }
+}
+
+spotless {
+    java {
+        target '**/*.java'
+        googleJavaFormat().aosp()
+        removeUnusedImports()
+        importOrder('', 'static *')
+    }
+}
